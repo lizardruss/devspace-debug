@@ -1,0 +1,15 @@
+# Dep2
+version: v2beta1
+
+localRegistry:
+  enabled: false
+
+pipelines:
+  build:
+    run: |
+      echo "Build dep2"
+      build_images dep2
+
+images:
+  dep2:
+    image: mydockeruser/dep2
