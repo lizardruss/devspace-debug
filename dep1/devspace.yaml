@@ -4,12 +4,16 @@ version: v2beta1
 localRegistry:
   enabled: false
 
+vars:
+  IMAGE: ${REGISTRY}/dep1
+
+images:
+  dep1:
+    image: "${IMAGE}"
+
 pipelines:
   build:
     run: |
       echo "Build dep1"
       build_images dep1
 
-images:
-  dep1:
-    image: mydockeruser/dep1
