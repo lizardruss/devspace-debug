@@ -1,26 +1,6 @@
-version: v2beta1
-
-dependencies:
-  dep1:
-    path: dep1
-  dep2:
-    path: dep2
-
-# Main file
-functions:
-  run_pipeline_for_services: |-
-    services=$2
-    test -z "$services" && services=$3
-    echo "$services" | xargs run_dependency_pipelines --pipeline $1
-
-vars:
-  ALL_BUILD_SERVICES: "dep1 dep2"
-
-pipelines:
-  build:
-    flags:
-    - name: apps
-      short: a
-      type: string
-    run: |-
-      run_pipeline_for_services "build" $(get_flag "apps") "$ALL_BUILD_SERVICES"
+version: v1beta11
+deployments:
+  - name: myapp
+    helm:
+      chart:
+        name: ./chart
