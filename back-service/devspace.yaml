@@ -1,0 +1,41 @@
+version: v2beta1
+
+images:
+  back-service:
+    image: lizardruss/back-service
+
+deployments:
+  back-service:
+    helm:
+      values:
+        labels:
+          service: back-service
+        containers:
+          - image: lizardruss/back-service
+
+dev:
+  back-service:
+    imageSelector: lizardruss/back-service
+    devImage: node:18.8
+    workingDir: /usr/app
+    command: ["npm", "run", "dev"]
+    logs: {}
+    persistPaths:
+      - path: /usr/app
+        volumePath: back-service
+    persistenceOptions:
+      size: 5Gi
+      accessModes:
+        - ReadWriteMany
+      name: pnpm-pvc
+    sync:
+      - path: ./
+        initialSync: preferLocal
+        startContainer: true
+#        waitInitialSync: true
+        printLogs: true
+        disableDownload: true
+        onUpload:
+          exec:
+            - command: "npm install"
+              onChange: ["./package-lock.json"]

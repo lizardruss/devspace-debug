@@ -1,6 +1,0 @@
-version: v1beta11
-deployments:
-  - name: myapp
-    helm:
-      chart:
-        name: ./chart

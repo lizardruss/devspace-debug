@@ -1,0 +1,49 @@
+version: v2beta1
+
+images:
+  api-service:
+    image: lizardruss/api-service
+
+deployments:
+  api-service:
+    helm:
+      values:
+        labels:
+          service: api-service
+        containers:
+          - image: lizardruss/api-service
+
+dev:
+  api-service:
+    imageSelector: lizardruss/api-service
+    devImage: node:18.8
+    workingDir: /usr/app
+    command: ["npm", "run", "dev"]
+    logs: {}
+    persistPaths:
+      - path: /usr/app
+        volumePath: api-service
+    persistenceOptions:
+      size: 5Gi
+      accessModes:
+        - ReadWriteMany
+      name: pnpm-pvc
+    sync:
+      - path: ./
+        initialSync: preferLocal
+        startContainer: true
+#        waitInitialSync: true
+        printLogs: true
+        disableDownload: true
+        onUpload:
+          exec:
+            - command: "npm install"
+              onChange: ["./package-lock.json"]
+  front-service:
+    labelSelector:
+      service: front-service
+    logs: {}
+  back-service:
+    labelSelector:
+      service: back-service
+    logs: {}
