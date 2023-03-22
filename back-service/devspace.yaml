@@ -19,7 +19,7 @@ dev:
   back-service:
     imageSelector: lizardruss/back-service
     devImage: node:18.8-alpine
-    workingDir: /usr/app
+    workingDir: /usr/app/back-service
     command: ["npm", "run", "dev"]
     logs: {}
     persistPaths:
@@ -33,11 +33,10 @@ dev:
     sync:
       - path: ./
         initialSync: preferLocal
-        startContainer: false
-#        waitInitialSync: true
         printLogs: true
         disableDownload: true
         onUpload:
+          restartContainer: true
           exec:
             - command: "npm install"
               onChange: ["./package-lock.json"]
