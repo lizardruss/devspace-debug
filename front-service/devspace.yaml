@@ -1,8 +1,10 @@
 version: v2beta1
-
+localRegistry:
+  enabled: false
 images:
   front-service:
     image: lizardruss/front-service
+    skipPush: true
 
 deployments:
   front-service:
@@ -16,7 +18,7 @@ deployments:
 dev:
   front-service:
     imageSelector: lizardruss/front-service
-    devImage: node:18.8
+    devImage: node:18.8-alpine
     workingDir: /usr/app
     command: ["npm", "run", "dev"]
     logs: {}
