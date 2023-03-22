@@ -33,7 +33,7 @@ dev:
     sync:
       - path: ./
         initialSync: preferLocal
-        startContainer: true
+        startContainer: false
 #        waitInitialSync: true
         printLogs: true
         disableDownload: true
