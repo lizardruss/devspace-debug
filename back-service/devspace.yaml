@@ -19,24 +19,24 @@ dev:
   back-service:
     imageSelector: lizardruss/back-service
     devImage: node:18.8-alpine
-    workingDir: /usr/app/back-service
+    workingDir: /usr/app
     command: ["npm", "run", "dev"]
     logs: {}
     persistPaths:
       - path: /usr/app
-        volumePath: back-service
+      - path: /.devspace
     persistenceOptions:
-      size: 5Gi
+      size: 2Gi
       accessModes:
         - ReadWriteMany
-      name: pnpm-pvc
+      name: back-service-pvc
     sync:
       - path: ./
         initialSync: preferLocal
+        startContainer: true
         printLogs: true
         disableDownload: true
         onUpload:
-          restartContainer: true
           exec:
             - command: "npm install"
               onChange: ["./package-lock.json"]

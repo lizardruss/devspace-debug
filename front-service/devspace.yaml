@@ -19,24 +19,24 @@ dev:
   front-service:
     imageSelector: lizardruss/front-service
     devImage: node:18.8-alpine
-    workingDir: /usr/app/front-service
+    workingDir: /usr/app
     command: ["npm", "run", "dev"]
     logs: {}
     persistPaths:
       - path: /usr/app
-        volumePath: front-service
+      - path: /.devspace
     persistenceOptions:
-      size: 5Gi
+      size: 2Gi
       accessModes:
         - ReadWriteMany
-      name: pnpm-pvc
+      name: front-service-pvc
     sync:
       - path: ./
         initialSync: preferLocal
+        startContainer: true
         printLogs: true
         disableDownload: true
         onUpload:
-          restartContainer: true
           exec:
             - command: "npm install"
               onChange: ["./package-lock.json"]
