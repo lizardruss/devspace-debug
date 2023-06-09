@@ -28,6 +28,8 @@ commands:
   watch: |-
     run_watch \
       --fail-on-error \
-      -p ./cmd/**/*.go \
-      -p ./pkg/**/*.go \
+      -p ./cmd/**/test.go \
+      -p ./cmd/**/test2.go \
+      -p ./pkg/**/test.go \
+      -p ./pkg/**/test2.go \
       -- devspace dev "$@"
