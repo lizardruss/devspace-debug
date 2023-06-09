@@ -1,26 +1,37 @@
 version: v2beta1
-
-dependencies:
-  dep1:
-    path: dep1
-  dep2:
-    path: dep2
-
-# Main file
-functions:
-  run_pipeline_for_services: |-
-    services=$2
-    test -z "$services" && services=$3
-    echo "$services" | xargs run_dependency_pipelines --pipeline $1
+name: hot-reload-container-restart
 
 vars:
-  ALL_BUILD_SERVICES: "dep1 dep2"
+  IMAGE: myusername/devspace
 
-pipelines:
-  build:
-    flags:
-    - name: apps
-      short: a
-      type: string
-    run: |-
-      run_pipeline_for_services "build" $(get_flag "apps") "$ALL_BUILD_SERVICES"
+images:
+  my-image:
+    image: ${IMAGE}
+    rebuildStrategy: ignoreContextChanges
+
+deployments:
+  my-deployment:
+    helm:
+      values:
+        containers:
+        - image: ${IMAGE}
+
+dev:
+  my-dev:
+    imageSelector: ${IMAGE}
+    devImage: ghcr.io/loft-sh/devspace-containers/go:1.20-alpine
+    command: ["go", "run", "/app/main.go"]
+    logs: {}
+    ports:
+    - port: 8080
+    sync:
+    - path: ./pkg
+      onUpload:
+        restartContainer: true
+    - path: ./pkg
+      onUpload:
+        restartContainer: true
+    - path: main.go
+      file: true
+      onUpload:
+        restartContainer: true
